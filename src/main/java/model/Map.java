@@ -44,7 +44,7 @@ public class Map {
 
     public void setBalls(int number) {
         for (int i = 0; i < number; i++) {
-            balls.add(new Ball(200,500 + i*20,10));
+            balls.add(new Ball(200,500 + i*16,8));
         }
     }
 

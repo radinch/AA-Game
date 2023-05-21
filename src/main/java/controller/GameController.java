@@ -33,6 +33,7 @@ public class GameController {
     private static int ballsForFreeze = 0;
     private static boolean hasPhaseTwoStarted = false;
     private static boolean hasPhaseThreeStarted = false;
+    private static boolean hasPhaseFourStarted = false;
     private static Timeline sizeTimeLine;
     private static Timeline visibilityTimeLine;
     private static int counterForReverse = 0;
@@ -42,7 +43,7 @@ public class GameController {
         for (java.util.Map.Entry<Ball, Line> entry : DataBank.getCurrentMap().getCircles().entrySet()) {
             pane.getChildren().addAll(entry.getKey(), entry.getValue());
         }
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 9; i++) {
             pane.getChildren().add(DataBank.getCurrentMap().getBalls().get(i));
         }
         //pane.getChildren().add(DataBank.getCurrentMap().getText());
@@ -65,28 +66,45 @@ public class GameController {
                 new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane, scene).play();
                 remainedBalls -= 1;
                 DataBank.getCurrentMap().setText(remainedBalls);
-                ballsForFreeze+=1;
-                ballsForFreeze = Math.min(5,ballsForFreeze);
+                ballsForFreeze += 1;
+                ballsForFreeze = Math.min(5, ballsForFreeze);
                 progressBar.setProgress(ballsForFreeze * 1.0 / 5);
                 DataBank.getCurrentMap().getBalls().remove(DataBank.getCurrentMap().getBalls().get(0));
-                if (DataBank.getCurrentMap().getBalls().size() >= 7)
-                    pane.getChildren().add(DataBank.getCurrentMap().getBalls().get(6));
+                if (DataBank.getCurrentMap().getBalls().size() >= 9)
+                    pane.getChildren().add(DataBank.getCurrentMap().getBalls().get(8));
                 new BallsMovement(DataBank.getCurrentMap().getBalls()).play();
-                if(remainedBalls <= DataBank.getNumberOfBalls()*0.75 && !hasPhaseTwoStarted) {
+                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.75 && !hasPhaseTwoStarted) {
                     changeToPhaseTwo(pane);
                     hasPhaseTwoStarted = true;
                 }
-                if(remainedBalls <= DataBank.getNumberOfBalls()*0.5 && !hasPhaseThreeStarted) {
+                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.5 && !hasPhaseThreeStarted) {
                     changeToPhaseThree();
                     hasPhaseThreeStarted = true;
                 }
+                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.25 && !hasPhaseFourStarted) {
+                    hasPhaseFourStarted = true;
+                }
+            } else if (keyName.equals("Right") && hasPhaseFourStarted) {
+                moveRight();
+            } else if (keyName.equals("Left") && hasPhaseFourStarted) {
+                moveLeft();
             }
         };
         return event;
     }
 
+    public void moveLeft() {
+        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() > 8)
+            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() - 8);
+    }
+
+    public void moveRight() {
+        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() < 392)
+            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() + 8);
+    }
+
     private void changeToPhaseTwo(Pane pane) {
-        Timeline sizeTimeLine =  new Timeline(new KeyFrame(Duration.seconds(1),
+        Timeline sizeTimeLine = new Timeline(new KeyFrame(Duration.seconds(1),
                 actionEvent -> changeSizeOfBalls(pane)));
         sizeTimeLine.setCycleCount(-1);
         sizeTimeLine.play();
@@ -94,7 +112,7 @@ public class GameController {
     }
 
     private void changeToPhaseThree() {
-        Timeline visibilityTimeLine =  new Timeline(new KeyFrame(Duration.seconds(1),
+        Timeline visibilityTimeLine = new Timeline(new KeyFrame(Duration.seconds(1),
                 actionEvent -> changeVisibility()));
         visibilityTimeLine.setCycleCount(-1);
         visibilityTimeLine.play();
@@ -107,8 +125,7 @@ public class GameController {
             if (entry.getKey().isVisible()) {
                 entry.getKey().setVisible(false);
                 entry.getValue().setVisible(false);
-            }
-            else {
+            } else {
                 entry.getValue().setVisible(true);
                 entry.getKey().setVisible(true);
             }
@@ -118,18 +135,18 @@ public class GameController {
     private void changeSizeOfBalls(Pane pane) {
         counterForReverse++;
         for (Map.Entry<Ball, Line> ballLineEntry : DataBank.getCurrentMap().getCircles().entrySet()) {
-            if(ballLineEntry.getKey().getRadius()>=9.9 && ballLineEntry.getKey().getRadius() <= 10.1)
+            if (ballLineEntry.getKey().getRadius() >= 7.9 && ballLineEntry.getKey().getRadius() <= 8.1)
                 ballLineEntry.getKey().setRadius(ballLineEntry.getKey().getRadius() * 1.15);
             else
-                ballLineEntry.getKey().setRadius(10);
+                ballLineEntry.getKey().setRadius(8);
         }
-        if(isCollisionHappened())
+        if (isCollisionHappened())
             afterCollision(pane);
-        if(counterForReverse>=4) {
-            int random_int = (int)Math.floor(Math.random() * 2 + 1);
-            if(random_int == 2) {
+        if (counterForReverse >= 4) {
+            int random_int = (int) Math.floor(Math.random() * 2 + 1);
+            if (random_int == 2) {
                 counterForReverse = 0;
-                angleForRotation *=-1;
+                angleForRotation *= -1;
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
                         actionEvent -> getRotationTimeline().play()));
                 timeline.setCycleCount(1);
@@ -148,8 +165,8 @@ public class GameController {
 
     public static Timeline getRotationTimeline() {
         double duration = 20 * 1.0 / DataBank.getRotationSpeed();
-        if(isFreeze)
-            duration*=3;
+        if (isFreeze)
+            duration *= 3;
         Rotate rotation = new Rotate();
         rotation.setPivotX(DataBank.getCurrentMap().getCenterX());
         rotation.setPivotY(DataBank.getCurrentMap().getCenterY());
@@ -185,11 +202,12 @@ public class GameController {
     public static void setAngleForRotation(int angleForRotation) {
         GameController.angleForRotation = angleForRotation;
     }
+
     private boolean isCollisionHappened() {
         for (Map.Entry<Ball, Line> entry1 : DataBank.getCurrentMap().getCircles().entrySet()) {
             for (Map.Entry<Ball, Line> entry2 : DataBank.getCurrentMap().getCircles().entrySet()) {
-                if(entry1.getKey().getBoundsInParent().intersects(entry2.getKey().getBoundsInParent())
-                && !entry1.getKey().equals(entry2.getKey())) {//todo fix bug for freeze timeline
+                if (entry1.getKey().getBoundsInParent().intersects(entry2.getKey().getBoundsInParent())
+                        && !entry1.getKey().equals(entry2.getKey())) {//todo fix bugs of intersection
                    /* System.out.println(entry1.getKey().getCenterX() + " " + entry1.getKey().getCenterY());
                     System.out.println(entry2.getKey().getCenterX() + " " + entry2.getKey().getCenterY());
                     entry1.getKey().setFill(new Color(0,1,0,1));
@@ -202,7 +220,7 @@ public class GameController {
     }
 
     private static void pauseTimeLines() {
-        if(sizeTimeLine != null)
+        if (sizeTimeLine != null)
             sizeTimeLine.stop();
         for (Map.Entry<Ball, Line> entry : DataBank.getCurrentMap().getCircles().entrySet()) {
             entry.getKey().getTimeline().stop();
@@ -213,7 +231,7 @@ public class GameController {
     }
 
     public static void afterCollision(Pane pane) {
-        BackgroundFill backgroundFill = new BackgroundFill(Color.color(1,0,0), CornerRadii.EMPTY, Insets.EMPTY);
+        BackgroundFill backgroundFill = new BackgroundFill(Color.color(1, 0, 0), CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         pane.setBackground(background);
         pauseTimeLines();

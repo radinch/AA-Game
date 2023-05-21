@@ -33,7 +33,7 @@ public class BallTransition extends Transition {
                 helpBall = entry.getKey();
                 break;
             }
-            Line line = new Line(200,275,200,375);
+            Line line = new Line(200,275,ball.getCenterX(),ball.getCenterY());
             line.setStrokeWidth(1.5);
             pane.getChildren().add(line);
             if(helpBall.isVisible()) {

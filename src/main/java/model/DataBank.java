@@ -24,7 +24,7 @@ public class DataBank {
     private static int rotationSpeed;
     private static double windSpeed;
     private static int freezeTimer;
-    private static int numberOfBalls = 20;
+    private static int numberOfBalls = 16;
 
     public static ArrayList<User> getUsers() {
         return users;
@@ -191,7 +191,7 @@ public class DataBank {
             double finalY = firstY + length * Math.sin(toRadiansAngle);
             Line line = new Line(firstX, firstY, finalX, finalY);
             line.setStrokeWidth(1.5);
-            balls.put(new Ball(finalX, finalY, 10), line);
+            balls.put(new Ball(finalX, finalY, 8), line);
             angle += 72;
         }
         return balls;
