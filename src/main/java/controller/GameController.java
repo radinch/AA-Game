@@ -22,7 +22,6 @@ import view.animaitons.BallTransition;
 import view.animaitons.BallsMovement;
 
 import java.util.Map;
-import java.util.Random;
 
 
 public class GameController {
@@ -33,10 +32,11 @@ public class GameController {
     private static int ballsForFreeze = 0;
     private static boolean hasPhaseTwoStarted = false;
     private static boolean hasPhaseThreeStarted = false;
-    private static boolean hasPhaseFourStarted = false;
+    private static boolean hasPhaseFourStarted = true;
     private static Timeline sizeTimeLine;
     private static Timeline visibilityTimeLine;
     private static int counterForReverse = 0;
+    private static int angleOfBall = 0;
 
     public void prepareMap(Pane pane) {
         pane.getChildren().add(DataBank.getCurrentMap().getMainCircle());
@@ -63,7 +63,7 @@ public class GameController {
                 timeline.setCycleCount(1);
                 timeline.play();
             } else if (keyName.equals("Space")) {
-                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane, scene).play();
+                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane,angleOfBall).play();
                 remainedBalls -= 1;
                 DataBank.getCurrentMap().setText(remainedBalls);
                 ballsForFreeze += 1;
@@ -94,13 +94,13 @@ public class GameController {
     }
 
     public void moveLeft() {
-        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() > 8)
-            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() - 8);
+        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() > 15)
+            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() - 15);
     }
 
     public void moveRight() {
-        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() < 392)
-            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() + 8);
+        if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() < 385)
+            DataBank.getCurrentMap().getBalls().get(0).setCenterX(DataBank.getCurrentMap().getBalls().get(0).getCenterX() + 15);
     }
 
     private void changeToPhaseTwo(Pane pane) {
