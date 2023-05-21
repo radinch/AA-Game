@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.EditProfileMenu"
+            stylesheets="@../CSS/style1.css"
+            styleClass="BackGround"
+            prefHeight="625.0" prefWidth="400.0">
+    <center>
+        <VBox alignment="CENTER" spacing="35">
+            <Label text="Edit Profile" id="label"/>
+            <TextField promptText="username" maxWidth="250" fx:id="username" styleClass="text-input"/>
+            <PasswordField promptText="password" maxWidth="250" fx:id="password" styleClass="text-input"/>
+            <Button text="Submit" onMouseClicked="#submit" styleClass="submit-button"/>
+        </VBox>
+    </center>
+</BorderPane>

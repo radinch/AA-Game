@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.MainMenuController"
+            stylesheets="@../CSS/style1.css"
+            styleClass="BackGround"
+            prefHeight="625.0" prefWidth="400">
+    <center>
+        <VBox alignment="CENTER" spacing="30">
+            <Label text="Main Menu" id="label"/>
+            <Button text="New Game" onMouseClicked="#startNewGame" styleClass="main-menu-button"/>
+            <Button text="Continue game" onMouseClicked="#ContinueGame" styleClass="main-menu-button"/>
+            <Button text="Profile Menu" onMouseClicked="#changeToProfileMenu" styleClass="main-menu-button"/>
+            <Button text="Scoreboard" onMouseClicked="#showScoreBoard" styleClass="main-menu-button"/>
+            <Button text="Settings" onMouseClicked="#goToSettings" styleClass="main-menu-button"/>
+            <Button text="Exit" onMouseClicked="#exit" styleClass="main-menu-button"/>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.ProfileMenuController"
+            stylesheets="@../CSS/style1.css"
+            styleClass="BackGround"
+            prefHeight="625.0" prefWidth="400.0">
+    <center>
+        <VBox alignment="CENTER" spacing="35">
+            <Label text="Profile Menu" id="label"/>
+            <Button text="Edit profile" onMouseClicked="#editProfile" styleClass="submit-button"/>
+            <Button text="Delete account" onMouseClicked="#deleteAccount" styleClass="submit-button"/>
+            <Button text="Logout" onMouseClicked="#logout" styleClass="submit-button"/>
+            <Button text="back" onMouseClicked="#back" styleClass="submit-button"/>
+        </VBox>
+
+    </center>
+</BorderPane>
