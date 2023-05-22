@@ -41,4 +41,8 @@ public class ProfileMenuController { //todo choose and changing avatar
     public void back(MouseEvent mouseEvent) throws Exception {
         new MainMenu().start(DataBank.getStage());
     }
+
+    public void changeAvatar(MouseEvent mouseEvent) throws Exception {
+        new AvatarMenu().start(DataBank.getStage());
+    }
 }

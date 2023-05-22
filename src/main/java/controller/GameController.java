@@ -38,6 +38,7 @@ public class GameController {
     private static int counterForReverse = 0;
     private static int angleOfBall = 0;
     private static int deltaAngle = 1;
+    private static Timeline angleTimeLine;
 
     public void prepareMap(Pane pane) {
         pane.getChildren().add(DataBank.getCurrentMap().getMainCircle());
@@ -64,7 +65,7 @@ public class GameController {
                 timeline.setCycleCount(1);
                 timeline.play();
             } else if (keyName.equals("Space")) {
-                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane,Math.toRadians(angleOfBall)).play();
+                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane, Math.toRadians(angleOfBall)).play();
                 remainedBalls -= 1;
                 DataBank.getCurrentMap().setText(remainedBalls);
                 ballsForFreeze += 1;
@@ -73,7 +74,8 @@ public class GameController {
                 DataBank.getCurrentMap().getBalls().remove(DataBank.getCurrentMap().getBalls().get(0));
                 if (DataBank.getCurrentMap().getBalls().size() >= 9)
                     pane.getChildren().add(DataBank.getCurrentMap().getBalls().get(8));
-                new BallsMovement(DataBank.getCurrentMap().getBalls()).play();
+                if(remainedBalls!=0)
+                    new BallsMovement(DataBank.getCurrentMap().getBalls()).play();
                 if (remainedBalls <= DataBank.getNumberOfBalls() * 0.75 && !hasPhaseTwoStarted) {
                     changeToPhaseTwo(pane);
                     hasPhaseTwoStarted = true;
@@ -123,21 +125,26 @@ public class GameController {
     }
 
     private void changeToPhaseFour(Text angle) {
-        Timeline angleTimeline = new Timeline(new KeyFrame(Duration.millis(500),
+        Timeline angleTimeline = new Timeline(new KeyFrame(Duration.millis(500 / 1.5 * DataBank.getWindSpeed()),
                 actionEvent -> changeAngle(angle)));
         angleTimeline.setCycleCount(-1);
+        GameController.angleTimeLine = angleTimeline;
         angleTimeline.play();
     }
 
     private void changeAngle(Text angle) {
         angleOfBall += deltaAngle;
-        if(angleOfBall >= 15 && deltaAngle > 0) {
-            deltaAngle*=-1;
+        if (angleOfBall >= 15 && deltaAngle > 0) {
+            deltaAngle *= -1;
         }
-        if(angleOfBall <= -15 && deltaAngle < 0) {
-            deltaAngle*=-1;
+        if (angleOfBall <= -15 && deltaAngle < 0) {
+            deltaAngle *= -1;
         }
-        angle.setText("angle: " +angleOfBall);
+        angle.setText("angle: " + angleOfBall);
+    }
+
+    public static int getRemainedBalls() {
+        return remainedBalls;
     }
 
     private void changeVisibility() {
@@ -160,8 +167,12 @@ public class GameController {
             else
                 ballLineEntry.getKey().setRadius(8);
         }
-        if (isCollisionHappened())
-            afterCollision(pane);
+        if (isCollisionHappened()) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
+                    actionEvent -> afterCollision(pane)));
+            timeline.setCycleCount(1);
+            timeline.play();
+        }
         if (counterForReverse >= 4) {
             int random_int = (int) Math.floor(Math.random() * 2 + 1);
             if (random_int == 2) {
@@ -175,13 +186,6 @@ public class GameController {
         }
     }
 
-    public static int getRemainedBalls() {
-        return remainedBalls;
-    }
-
-    public static void setRemainedBalls(int remainedBalls) {
-        GameController.remainedBalls = remainedBalls;
-    }
 
     public static Timeline getRotationTimeline() {
         double duration = 20 * 1.0 / DataBank.getRotationSpeed();
@@ -236,14 +240,27 @@ public class GameController {
             sizeTimeLine.stop();
         for (Map.Entry<Ball, Line> entry : DataBank.getCurrentMap().getCircles().entrySet()) {
             entry.getKey().getTimeline().stop();
-            break;
+            if (!entry.getKey().isVisible()) {
+                entry.getKey().setVisible(true);
+                entry.getValue().setVisible(true);
+            }
         }
         if (visibilityTimeLine != null)
             visibilityTimeLine.stop();
+        if (angleTimeLine != null) {
+            angleTimeLine.stop();
+        }
     }
 
     public static void afterCollision(Pane pane) {
         BackgroundFill backgroundFill = new BackgroundFill(Color.color(1, 0, 0), CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        pane.setBackground(background);
+        pauseTimeLines();
+    }
+
+    public static void afterWin(Pane pane) {
+        BackgroundFill backgroundFill = new BackgroundFill(Color.color(0.12, 0.55, 0.184), CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         pane.setBackground(background);
         pauseTimeLines();

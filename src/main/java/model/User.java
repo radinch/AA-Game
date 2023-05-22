@@ -1,13 +1,14 @@
 package model;
 
-import java.util.ArrayList;
+import javafx.scene.image.Image;
+
 
 public class User {
 
     private String username;
     private String password;
-    private Avatar avatar;
-    public User(String username, String password,Avatar avatar) {
+    private String avatar;
+    public User(String username, String password,String avatar) {
         this.username = username;
         this.password = password;
         this.avatar = avatar;
@@ -32,11 +33,11 @@ public class User {
         this.password = password;
     }
 
-    public Avatar getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Avatar avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 }

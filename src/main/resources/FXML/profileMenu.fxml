@@ -17,6 +17,7 @@
             <Label text="Profile Menu" id="label"/>
             <Button text="Edit profile" onMouseClicked="#editProfile" styleClass="submit-button"/>
             <Button text="Delete account" onMouseClicked="#deleteAccount" styleClass="submit-button"/>
+            <Button text="Change avatar" onMouseClicked="#changeAvatar" styleClass="submit-button"/>
             <Button text="Logout" onMouseClicked="#logout" styleClass="submit-button"/>
             <Button text="back" onMouseClicked="#back" styleClass="submit-button"/>
         </VBox>

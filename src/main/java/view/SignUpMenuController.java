@@ -4,11 +4,14 @@ import controller.LoginController;
 import controller.MainMenuController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import model.DataBank;
 import model.User;
+
+import java.util.Optional;
 
 public class SignUpMenuController {//todo choosing avatar
     @FXML
@@ -33,14 +36,23 @@ public class SignUpMenuController {//todo choosing avatar
             alert.showAndWait();
         }
         else {
-            DataBank.getUsers().add(new User(username.getText(),password.getText(),null));
+            int random_int = (int) Math.floor(Math.random() * 6 + 1);
+            User user = new User(username.getText(),password.getText(), null);
+            DataBank.getUsers().add(user);
             DataBank.writeToJson();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText("sign up successful");
-            alert.setContentText("user created now you can login");
-            alert.showAndWait();
-            new LoginMenu().start(DataBank.getStage());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Choose avatar");
+            alert.setContentText("do you want to choose avatar?");
+            Optional<ButtonType> result = alert.showAndWait();
+            DataBank.setCurrentUser(DataBank.getUserByUsername(username.getText()));
+            if(result.get() == ButtonType.OK) {
+                new AvatarMenu().start(DataBank.getStage());
+            }
+            else {
+                DataBank.getCurrentUser().setAvatar((SignUpMenuController.class.getResource("/IMAGE/" + random_int+".png").toExternalForm()));
+                new MainMenu().start(DataBank.getStage());
+            }
         }
     }
 

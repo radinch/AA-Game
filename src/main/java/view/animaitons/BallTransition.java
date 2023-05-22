@@ -1,6 +1,8 @@
 package view.animaitons;
 
 import controller.GameController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -8,6 +10,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import model.Ball;
 import model.DataBank;
+import view.Game;
 
 import java.util.Map;
 
@@ -61,7 +64,13 @@ public class BallTransition extends Transition {
             GameController.getRotationTimeline().play();
             ball.setRadius(helpBall.getRadius());
             if (isCollisionHappened()) {
-                GameController.afterCollision(pane);
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
+                        actionEvent -> GameController.afterCollision(pane)));
+                timeline.setCycleCount(1);
+                timeline.play();
+            }
+            else if(GameController.getRemainedBalls() == 0) {
+                GameController.afterWin(pane);
             }
             this.stop();
         }
