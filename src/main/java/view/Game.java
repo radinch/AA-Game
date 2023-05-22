@@ -4,12 +4,15 @@ import controller.GameController;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -23,18 +26,24 @@ public class Game extends Application { //todo add text to main circle
         gameController.prepareMap(gamePane);
         Scene scene = new Scene(gamePane);
         stage.setScene(scene);
+        HBox hBox = new HBox();
         ProgressBar progressBar = new ProgressBar();
-        createProgressBar(progressBar);
-        gamePane.getChildren().add(progressBar);
+        Text angle = new Text();
+        angle.setText("angle: 0");
+        createMargins(hBox,angle,progressBar);
+        gamePane.getChildren().add(hBox);
         Timeline rotationTimeLine = GameController.getRotationTimeline();
         rotationTimeLine.play();
-        scene.addEventHandler(KeyEvent.KEY_PRESSED,gameController.getEventHandler(gamePane,scene,progressBar));
+        scene.addEventHandler(KeyEvent.KEY_PRESSED,gameController.getEventHandler(gamePane, progressBar,angle));
         stage.show();
     }
 
-    private void createProgressBar(ProgressBar progressBar) {
+    private void createMargins(HBox hBox,Text angle,ProgressBar progressBar) {
+        hBox.setSpacing(20);
         progressBar.setProgress(0);
         progressBar.setId("progress-bar");
+        angle.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,15));
+        hBox.getChildren().addAll(progressBar,angle);
     }
 
 

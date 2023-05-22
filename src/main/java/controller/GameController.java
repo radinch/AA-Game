@@ -5,7 +5,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -14,6 +13,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import model.Ball;
@@ -32,11 +32,12 @@ public class GameController {
     private static int ballsForFreeze = 0;
     private static boolean hasPhaseTwoStarted = false;
     private static boolean hasPhaseThreeStarted = false;
-    private static boolean hasPhaseFourStarted = true;
+    private static boolean hasPhaseFourStarted = false;
     private static Timeline sizeTimeLine;
     private static Timeline visibilityTimeLine;
     private static int counterForReverse = 0;
     private static int angleOfBall = 0;
+    private static int deltaAngle = 1;
 
     public void prepareMap(Pane pane) {
         pane.getChildren().add(DataBank.getCurrentMap().getMainCircle());
@@ -50,7 +51,7 @@ public class GameController {
         DataBank.getCurrentMap().setText(DataBank.getNumberOfBalls());
     }
 
-    public EventHandler<KeyEvent> getEventHandler(Pane pane, Scene scene, ProgressBar progressBar) {
+    public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle) {
         EventHandler<KeyEvent> event = keyEvent -> {
             String keyName = keyEvent.getCode().getName();
             if (keyName.equals("Tab") && ballsForFreeze == 5) {
@@ -63,7 +64,7 @@ public class GameController {
                 timeline.setCycleCount(1);
                 timeline.play();
             } else if (keyName.equals("Space")) {
-                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane,angleOfBall).play();
+                new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane,Math.toRadians(angleOfBall)).play();
                 remainedBalls -= 1;
                 DataBank.getCurrentMap().setText(remainedBalls);
                 ballsForFreeze += 1;
@@ -81,7 +82,8 @@ public class GameController {
                     changeToPhaseThree();
                     hasPhaseThreeStarted = true;
                 }
-                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.25 && !hasPhaseFourStarted) {
+                if (!hasPhaseFourStarted) {
+                    changeToPhaseFour(angle);
                     hasPhaseFourStarted = true;
                 }
             } else if (keyName.equals("Right") && hasPhaseFourStarted) {
@@ -92,6 +94,7 @@ public class GameController {
         };
         return event;
     }
+
 
     public void moveLeft() {
         if (DataBank.getCurrentMap().getBalls().get(0).getCenterX() > 15)
@@ -117,7 +120,24 @@ public class GameController {
         visibilityTimeLine.setCycleCount(-1);
         visibilityTimeLine.play();
         GameController.visibilityTimeLine = visibilityTimeLine;
-        //todo turn off this time line
+    }
+
+    private void changeToPhaseFour(Text angle) {
+        Timeline angleTimeline = new Timeline(new KeyFrame(Duration.millis(500),
+                actionEvent -> changeAngle(angle)));
+        angleTimeline.setCycleCount(-1);
+        angleTimeline.play();
+    }
+
+    private void changeAngle(Text angle) {
+        angleOfBall += deltaAngle;
+        if(angleOfBall >= 15 && deltaAngle > 0) {
+            deltaAngle*=-1;
+        }
+        if(angleOfBall <= -15 && deltaAngle < 0) {
+            deltaAngle*=-1;
+        }
+        angle.setText("angle: " +angleOfBall);
     }
 
     private void changeVisibility() {
