@@ -24,7 +24,7 @@ public class DataBank {
     private static int rotationSpeed;
     private static double windSpeed;
     private static int freezeTimer;
-    private static int numberOfBalls = 12;
+    private static int numberOfBalls = 20;
 
     public static ArrayList<User> getUsers() {
         return users;

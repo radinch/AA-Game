@@ -82,7 +82,7 @@ public class GameController {
                     changeToPhaseThree();
                     hasPhaseThreeStarted = true;
                 }
-                if (!hasPhaseFourStarted) {
+                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.25 && !hasPhaseFourStarted) {
                     changeToPhaseFour(angle);
                     hasPhaseFourStarted = true;
                 }
@@ -213,14 +213,6 @@ public class GameController {
                 actionEvent -> getRotationTimeline().play()));
         timeline.setCycleCount(1);
         timeline.play();
-    }
-
-    public static int getAngleForRotation() {
-        return angleForRotation;
-    }
-
-    public static void setAngleForRotation(int angleForRotation) {
-        GameController.angleForRotation = angleForRotation;
     }
 
     private boolean isCollisionHappened() {

@@ -98,7 +98,7 @@ public class BallTransition extends Transition {
     }*/
 
     private double getPathDistanceForY() {
-        double firstX = Math.abs(this.firstX);
+        double firstX = this.firstX;
         double delta = Math.pow(550 - 2*firstX*Math.tan(angle),2) - 4*(53125 + firstX*firstX)/Math.pow(Math.cos(angle),2);
         if(delta < 0)
             return -1;
