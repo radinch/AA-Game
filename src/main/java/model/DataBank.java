@@ -25,6 +25,15 @@ public class DataBank {
     private static double windSpeed;
     private static int freezeTimer;
     private static int numberOfBalls = 12;
+    private static int mapNumber = 1;
+
+    public static int getMapNumber() {
+        return mapNumber;
+    }
+
+    public static void setMapNumber(int mapNumber) {
+        DataBank.mapNumber = mapNumber;
+    }
 
     public static ArrayList<User> getUsers() {
         return users;
@@ -196,6 +205,5 @@ public class DataBank {
         }
         return balls;
     }
-
 
 }

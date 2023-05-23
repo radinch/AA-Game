@@ -6,6 +6,8 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import model.Ball;
@@ -116,4 +118,5 @@ public class BallTransition extends Transition {
             return -1;
         return (550 - 2*firstX*Math.tan(angle) -Math.sqrt(delta)) * Math.pow(Math.cos(angle),2) / 2;
     }
+
 }

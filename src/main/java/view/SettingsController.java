@@ -52,6 +52,7 @@ public class SettingsController {
         alert.setContentText("this changes will be implemented");
         alert.showAndWait();
         DataBank.setDifficultyDegree(difficultyBox.getValue());
+        DataBank.setMapNumber(mapBox.getValue());
         DataBank.setCurrentMap(mapBox.getValue());
         DataBank.setNumberOfBalls(numberOfBallsBox.getValue());
         new MainMenu().start(DataBank.getStage());
