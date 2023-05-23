@@ -61,7 +61,7 @@ public class Scoreboard extends Application {
         table.getItems().sort(Comparator.comparing(User::getHighScore).reversed()
                 .thenComparing(User::getTime));
         VBox vBox = new VBox();
-        vBox.setLayoutX(75);
+        vBox.setLayoutX(50);
         vBox.setSpacing(20);
         vBox.setAlignment(Pos.CENTER);
         vBox.getChildren().addAll(label,table);
