@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyEvent;
@@ -301,6 +302,7 @@ public class GameController {
         }
         if (timerTimeLine != null)
             timerTimeLine.pause();
+        mediaPlayer.pause();
 
     }
 
@@ -352,12 +354,12 @@ public class GameController {
         Button music = new Button();
         music.setId("setting-button");
         music.setText("music");
-        music.setOnMousePressed(mouseEvent -> changeMusic(pane));
+        music.setOnMousePressed(mouseEvent -> changeMusic(pane,vBox));
 
         Button mute = new Button();
         mute.setId("setting-button");
-        mute.setText("mute");
-        mute.setOnMousePressed(mouseEvent -> muteMusic(pane));
+        mute.setText("mute/unmute");
+        mute.setOnMousePressed(mouseEvent -> muteMusic());
 
         Button restart = new Button();
         restart.setId("setting-button");
@@ -408,6 +410,7 @@ public class GameController {
         }
         if (timerTimeLine != null)
             timerTimeLine.play();
+        mediaPlayer.play();
     }
 
     private void restartGame() throws Exception {
@@ -440,8 +443,16 @@ public class GameController {
         mediaPlayer = new MediaPlayer(media);
     }
 
-    private void muteMusic(Pane pane) {
-        mediaPlayer.stop();
+    private void muteMusic() {
+        if(mediaPlayer.isMute())
+            mediaPlayer.setMute(false);
+        else
+            mediaPlayer.setMute(true);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText("Change Options Successful");
+        alert.setContentText("this changes will be implemented");
+        alert.showAndWait();
     }
 
     private void showHelp(Pane pane,VBox vBox) {
@@ -478,7 +489,43 @@ public class GameController {
         pane.getChildren().add(vBox);
     }
 
-    private void changeMusic(Pane pane) {
+    private void changeMusic(Pane pane,VBox vBox) {
+        VBox vBox1 = new VBox();
+        vBox1.setSpacing(20);
+        vBox1.setAlignment(Pos.CENTER);
+        vBox1.setLayoutX(75);
+        vBox1.setLayoutY(150);
+        Button music1 = new Button();
+        music1.setId("setting-button");
+        music1.setText("FROG");
+
+        Button music2 = new Button();
+        music2.setId("setting-button");
+        music2.setText("MOUNTAINS");
+
+        Button music3 = new Button();
+        music3.setId("setting-button");
+        music3.setText("DAY-ONE");
+        music1.setOnMousePressed(mouseEvent -> changeTrack(GameController.class.getResource("/MEDIA/music1.mp3").toString()));
+        music2.setOnMousePressed(mouseEvent -> changeTrack(GameController.class.getResource("/MEDIA/music2.mp3").toString()));
+        music3.setOnMousePressed(mouseEvent -> changeTrack(GameController.class.getResource("/MEDIA/music3.mp3").toString()));
+        Button button = new Button();
+        button.setId("setting-button");
+        button.setText("back");
+        vBox1.getChildren().addAll(music1,music2,music3,button);
+        pane.getChildren().add(vBox1);
+        pane.getChildren().remove(vBox);
+        button.setOnMousePressed(mouseEvent -> backToPauseMenu(pane,vBox,vBox1));
+    }
+
+    private void changeTrack(String address) {
+        media = new Media(address);
+        mediaPlayer = new MediaPlayer(media);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText("Change Options Successful");
+        alert.setContentText("this changes will be implemented");
+        alert.showAndWait();
     }
 
 }
