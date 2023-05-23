@@ -3,6 +3,8 @@ package controller;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ProgressBar;
@@ -39,6 +41,9 @@ public class GameController {
     private static int angleOfBall = 0;
     private static int deltaAngle = 1;
     private static Timeline angleTimeLine;
+    public static int score = 0;
+    public static Text scoreOfPlayer ;
+    private static int timeSeconds = 0;
 
     public void prepareMap(Pane pane) {
         pane.getChildren().add(DataBank.getCurrentMap().getMainCircle());
@@ -52,7 +57,9 @@ public class GameController {
         DataBank.getCurrentMap().setText(DataBank.getNumberOfBalls());
     }
 
-    public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle) {
+    public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle, Text score, Text timer) {
+        scoreOfPlayer = score;
+        startTimer(timer);
         EventHandler<KeyEvent> event = keyEvent -> {
             String keyName = keyEvent.getCode().getName();
             if (keyName.equals("Tab") && ballsForFreeze == 5) {
@@ -96,6 +103,22 @@ public class GameController {
         };
         return event;
     }
+
+    private void startTimer(Text timer) {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            timeSeconds +=1;
+            updateTimer(timer);
+        }));
+        timeline.setCycleCount(-1);
+        timeline.play();
+    }
+
+    private void updateTimer(Text timer) {
+        int minutes = timeSeconds / 60;
+        int seconds = timeSeconds % 60;
+        timer.setText(String.format("%02d:%02d", minutes, seconds));
+    }
+
 
 
     public void moveLeft() {
@@ -257,13 +280,23 @@ public class GameController {
         Background background = new Background(backgroundFill);
         pane.setBackground(background);
         pauseTimeLines();
+        changeScores();
     }
+
 
     public static void afterWin(Pane pane) {
         BackgroundFill backgroundFill = new BackgroundFill(Color.color(0.12, 0.55, 0.184), CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         pane.setBackground(background);
         pauseTimeLines();
+        changeScores();
+    }
+
+    private static void changeScores() {
+        if(DataBank.getCurrentUser() != null) {
+            if(DataBank.getCurrentUser().getHighScore() < score * DataBank.getDifficultyDegree())
+                DataBank.getCurrentUser().setHighScore(score * DataBank.getDifficultyDegree());
+        }
     }
 
 }

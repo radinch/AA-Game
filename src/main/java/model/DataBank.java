@@ -24,7 +24,7 @@ public class DataBank {
     private static int rotationSpeed;
     private static double windSpeed;
     private static int freezeTimer;
-    private static int numberOfBalls = 20;
+    private static int numberOfBalls = 12;
 
     public static ArrayList<User> getUsers() {
         return users;
@@ -83,16 +83,16 @@ public class DataBank {
     }
 
     private static Map getMapOne() {
-        return new Map(getMainCircle(), getMapOneCircles(), 200, 225,getMainCircleText());
+        return new Map(getMainCircle(), getMapOneCircles(72), 200, 225,getMainCircleText());
     }
 
     private static Map getMapTwo() {
-        return null;
+        return new Map(getMainCircle(),getMapOneCircles(60),200,225,getMainCircleText());
     }
 
     private
     static Map getMapThree() {
-        return null;
+        return new Map(getMainCircle(),getMapOneCircles(45),200,225,getMainCircleText());
     }
 
     public static Map getCurrentMap() {
@@ -179,22 +179,23 @@ public class DataBank {
         return text;
     }
 
-    private static HashMap<Ball, Line> getMapOneCircles() {
+    private static HashMap<Ball, Line> getMapOneCircles(int delta) {
         double firstX = 200;
         double firstY = 225;
         double angle = 0;
         double length = 150;
         HashMap<Ball, Line> balls = new HashMap<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 360/delta; i++) {
             double toRadiansAngle = Math.toRadians(angle);
             double finalX = firstX + length * Math.cos(toRadiansAngle);
             double finalY = firstY + length * Math.sin(toRadiansAngle);
             Line line = new Line(firstX, firstY, finalX, finalY);
             line.setStrokeWidth(1.5);
             balls.put(new Ball(finalX, finalY, 8), line);
-            angle += 72;
+            angle += delta;
         }
         return balls;
     }
+
 
 }

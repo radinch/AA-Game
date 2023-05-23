@@ -69,8 +69,11 @@ public class BallTransition extends Transition {
                 timeline.setCycleCount(1);
                 timeline.play();
             }
-            else if(GameController.getRemainedBalls() == 0) {
-                GameController.afterWin(pane);
+            else  {
+                GameController.score += 1;
+                GameController.scoreOfPlayer.setText("score: " + GameController.score);
+                if(GameController.getRemainedBalls() == 0)
+                    GameController.afterWin(pane);
             }
             this.stop();
         }

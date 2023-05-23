@@ -102,8 +102,8 @@ PasswordField{
 }
 
 #progress-bar {
-    -fx-min-width: 250;
-    -fx-max-width: 250;
+    -fx-min-width: 180;
+    -fx-max-width: 180;
     -fx-max-height: 25;
     -fx-min-height: 25;
     -fx-accent: black;

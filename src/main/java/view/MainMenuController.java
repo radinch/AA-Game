@@ -23,7 +23,8 @@ public class MainMenuController {
         new ProfileMenu().start(DataBank.getStage());
     }
 
-    public void showScoreBoard(MouseEvent mouseEvent) {
+    public void showScoreBoard(MouseEvent mouseEvent) throws Exception {
+        new Scoreboard().start(DataBank.getStage());
     }
 
     public void goToSettings(MouseEvent mouseEvent) throws Exception {
