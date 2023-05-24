@@ -65,7 +65,7 @@ public class GameController {
 
     public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle, Text score, Text timer, Text remainedBalls) {
         scoreOfPlayer = score;
-        startTimer(timer);
+        startTimer(pane,timer);
         playTrackOfGame();
         pauseTimeLines();
         Timeline musicTimeLine = new Timeline(new KeyFrame(Duration.millis(300),actionEvent -> resumeTimeLines()));
@@ -134,20 +134,22 @@ public class GameController {
     }
 
 
-    private void startTimer(Text timer) {
+    private void startTimer(Pane pane,Text timer) {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             timeSeconds += 1;
-            updateTimer(timer);
+            updateTimer(pane,timer);
         }));
         timeline.setCycleCount(-1);
         timeline.play();
         GameController.timerTimeLine = timeline;
     }
 
-    private void updateTimer(Text timer) {
+    private void updateTimer(Pane pane,Text timer) {
         int minutes = timeSeconds / 60;
         int seconds = timeSeconds % 60;
         timer.setText(String.format("%02d:%02d", minutes, seconds));
+        if(minutes == 1)
+            afterCollision(pane);
     }
 
 
@@ -266,10 +268,12 @@ public class GameController {
 
     private void returnToNormal() {
         isFreeze = false;
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
-                actionEvent -> getRotationTimeline().play()));
-        timeline.setCycleCount(1);
-        timeline.play();
+        if(!isGamePaused) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
+                    actionEvent -> getRotationTimeline().play()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        }
     }
 
     private boolean isCollisionHappened() {
