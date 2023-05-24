@@ -14,11 +14,11 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.DataBank;
 
 import java.util.Objects;
-import java.util.Timer;
 
-public class Game extends Application { //todo add text to main circle
+public class Game extends Application {
     private final GameController gameController = new GameController();
     @Override
     public void start(Stage stage) throws Exception {
@@ -34,22 +34,25 @@ public class Game extends Application { //todo add text to main circle
         angle.setText("angle: 0");
         Text timer = new Text();
         timer.setText("00:00");
-        createMargins(hBox,angle,progressBar,score,timer);
+        Text remainedBalls = new Text();
+        remainedBalls.setText(String.valueOf(DataBank.getNumberOfBalls()));
+        createMargins(hBox,angle,progressBar,score,timer,remainedBalls);
         gamePane.getChildren().add(hBox);
         Timeline rotationTimeLine = GameController.getRotationTimeline();
         rotationTimeLine.play();
-        scene.addEventHandler(KeyEvent.KEY_PRESSED,gameController.getEventHandler(gamePane, progressBar,angle,score,timer));
+        scene.addEventHandler(KeyEvent.KEY_PRESSED,gameController.getEventHandler(gamePane, progressBar,angle,score,timer,remainedBalls));
         stage.show();
     }
 
-    private void createMargins(HBox hBox, Text angle, ProgressBar progressBar, Text score,Text timer) {
-        hBox.setSpacing(20);
+    private void createMargins(HBox hBox, Text angle, ProgressBar progressBar, Text score, Text timer, Text remainedBalls) {
+        hBox.setSpacing(17.5);
         progressBar.setProgress(0);
         progressBar.setId("progress-bar");
-        angle.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,15));
-        score.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,15));
-        timer.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,15));
-        hBox.getChildren().addAll(progressBar,angle,score,timer);
+        angle.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,12.5));
+        score.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,12.5));
+        timer.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,12.5));
+        remainedBalls.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,12.5));
+        hBox.getChildren().addAll(progressBar,angle,score,timer,remainedBalls);
     }
 
 

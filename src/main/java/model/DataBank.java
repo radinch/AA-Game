@@ -2,7 +2,6 @@ package model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -26,6 +25,9 @@ public class DataBank {
     private static int freezeTimer;
     private static int numberOfBalls = 12;
     private static int mapNumber = 1;
+    private static boolean isMusicMuted = false;
+    public static String keyForShooting = "Space";
+    public static String keyForFreezing = "Tab";
 
     public static int getMapNumber() {
         return mapNumber;
@@ -92,17 +94,17 @@ public class DataBank {
     }
 
     private static Map getMapOne() {
-        return new Map(getMainCircle(), getMapOneCircles(72), 200, 225,getMainCircleText());
+        return new Map(getMainCircle(), getMapOneCircles(72), 200, 225, getMainCircleText());
     }
 
     private static Map getMapTwo() {
-        return new Map(getMainCircle(),getMapOneCircles(60),200,225,getMainCircleText());
+        return new Map(getMainCircle(), getMapOneCircles(60), 200, 225, getMainCircleText());
     }
 
-    private
-    static Map getMapThree() {
-        return new Map(getMainCircle(),getMapOneCircles(45),200,225,getMainCircleText());
+    private static Map getMapThree() {
+        return new Map(getMainCircle(), getMapOneCircles(45), 200, 225, getMainCircleText());
     }
+
 
     public static Map getCurrentMap() {
         return currentMap;
@@ -115,6 +117,7 @@ public class DataBank {
             case 3 -> currentMap = getMapThree();
         }
     }
+
 
     public static int getNumberOfBalls() {
         return numberOfBalls;
@@ -182,9 +185,9 @@ public class DataBank {
     }
 
     private static Text getMainCircleText() {
-        Text text = new Text(180,237,"");
-        text.setFill(new Color(1,1,1,1));
-        text.setFont(Font.font("Tw Cen MT",40));
+        Text text = new Text(180, 237, "");
+        text.setFill(new Color(1, 1, 1, 1));
+        text.setFont(Font.font("Tw Cen MT", 40));
         return text;
     }
 
@@ -194,7 +197,7 @@ public class DataBank {
         double angle = 0;
         double length = 150;
         HashMap<Ball, Line> balls = new HashMap<>();
-        for (int i = 0; i < 360/delta; i++) {
+        for (int i = 0; i < 360 / delta; i++) {
             double toRadiansAngle = Math.toRadians(angle);
             double finalX = firstX + length * Math.cos(toRadiansAngle);
             double finalY = firstY + length * Math.sin(toRadiansAngle);
@@ -206,4 +209,11 @@ public class DataBank {
         return balls;
     }
 
+    public static boolean IsMusicMuted() {
+        return isMusicMuted;
+    }
+
+    public static void setMusicMuted() {
+        isMusicMuted = !isMusicMuted;
+    }
 }

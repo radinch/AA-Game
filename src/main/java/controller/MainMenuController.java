@@ -9,4 +9,8 @@ public class MainMenuController {
         DataBank.initializeGameDegrees();
         DataBank.getCurrentMap().setBalls(DataBank.getNumberOfBalls());
     }
+
+    public static void prepareTwoPlayerGame() {
+        DataBank.initializeGameDegrees();
+    }
 }

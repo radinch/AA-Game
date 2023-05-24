@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class LoginMenu extends Application {
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(LoginMenu.class,args);
     }
 
     @Override

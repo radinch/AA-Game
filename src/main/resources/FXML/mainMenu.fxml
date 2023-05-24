@@ -16,6 +16,7 @@
         <VBox alignment="CENTER" spacing="30">
             <Label text="Main Menu" id="label"/>
             <Button text="New Game" onMouseClicked="#startNewGame" styleClass="main-menu-button"/>
+            <Button text="Two Player Game" onMouseClicked="#twoPlayerGame" styleClass="main-menu-button"/>
             <Button text="Continue game" onMouseClicked="#ContinueGame" styleClass="main-menu-button"/>
             <Button text="Profile Menu" onMouseClicked="#changeToProfileMenu" styleClass="main-menu-button"/>
             <Button text="Scoreboard" onMouseClicked="#showScoreBoard" styleClass="main-menu-button"/>

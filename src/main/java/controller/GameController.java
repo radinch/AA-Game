@@ -63,17 +63,17 @@ public class GameController {
         DataBank.getCurrentMap().setText(DataBank.getNumberOfBalls());
     }
 
-    public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle, Text score, Text timer) {
+    public EventHandler<KeyEvent> getEventHandler(Pane pane, ProgressBar progressBar, Text angle, Text score, Text timer, Text remainedBalls) {
         scoreOfPlayer = score;
         startTimer(timer);
         playTrackOfGame();
         pauseTimeLines();
-        Timeline musicTimeLine = new Timeline(new KeyFrame(Duration.millis(250),actionEvent -> resumeTimeLines()));
+        Timeline musicTimeLine = new Timeline(new KeyFrame(Duration.millis(300),actionEvent -> resumeTimeLines()));
         musicTimeLine.setCycleCount(1);
         musicTimeLine.play();
         EventHandler<KeyEvent> event = keyEvent -> {
             String keyName = keyEvent.getCode().getName();
-            if (keyName.equals("Tab") && ballsForFreeze == 5 && !isGamePaused) {
+            if (keyName.equals(DataBank.keyForFreezing) && ballsForFreeze == 5 && !isGamePaused) {
                 ballsForFreeze = 0;
                 progressBar.setProgress(0);
                 isFreeze = true;
@@ -82,28 +82,29 @@ public class GameController {
                         actionEvent -> returnToNormal()));
                 timeline.setCycleCount(1);
                 timeline.play();
-            } else if (keyName.equals("Space") && !isGamePaused) {
+            } else if (keyName.equals(DataBank.keyForShooting) && !isGamePaused) {
                 // playShootingSound();
                 new BallTransition(DataBank.getCurrentMap().getBalls().get(0), pane, Math.toRadians(angleOfBall)).play();
-                remainedBalls -= 1;
-                DataBank.getCurrentMap().setText(remainedBalls);
+                GameController.remainedBalls -= 1;
+                remainedBalls.setText(String.valueOf(GameController.remainedBalls));
+                DataBank.getCurrentMap().setText(GameController.remainedBalls);
                 ballsForFreeze += 1;
                 ballsForFreeze = Math.min(5, ballsForFreeze);
                 progressBar.setProgress(ballsForFreeze * 1.0 / 5);
                 DataBank.getCurrentMap().getBalls().remove(DataBank.getCurrentMap().getBalls().get(0));
                 if (DataBank.getCurrentMap().getBalls().size() >= 9)
                     pane.getChildren().add(DataBank.getCurrentMap().getBalls().get(8));
-                if (remainedBalls != 0)
+                if (GameController.remainedBalls != 0)
                     new BallsMovement(DataBank.getCurrentMap().getBalls()).play();
-                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.75 && !hasPhaseTwoStarted) {
+                if (GameController.remainedBalls <= DataBank.getNumberOfBalls() * 0.75 && !hasPhaseTwoStarted) {
                     changeToPhaseTwo(pane);
                     hasPhaseTwoStarted = true;
                 }
-                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.5 && !hasPhaseThreeStarted) {
+                if (GameController.remainedBalls <= DataBank.getNumberOfBalls() * 0.5 && !hasPhaseThreeStarted) {
                     changeToPhaseThree();
                     hasPhaseThreeStarted = true;
                 }
-                if (remainedBalls <= DataBank.getNumberOfBalls() * 0.25 && !hasPhaseFourStarted) {
+                if (GameController.remainedBalls <= DataBank.getNumberOfBalls() * 0.25 && !hasPhaseFourStarted) {
                     changeToPhaseFour(angle);
                     hasPhaseFourStarted = true;
                 }
@@ -128,6 +129,8 @@ public class GameController {
     private void playTrackOfGame() {
         mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
         mediaPlayer.play();
+        if(DataBank.IsMusicMuted())
+            mediaPlayer.setMute(true);
     }
 
 
@@ -444,10 +447,8 @@ public class GameController {
     }
 
     private void muteMusic() {
-        if(mediaPlayer.isMute())
-            mediaPlayer.setMute(false);
-        else
-            mediaPlayer.setMute(true);
+        DataBank.setMusicMuted();
+        mediaPlayer.setMute(!mediaPlayer.isMute());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText("Change Options Successful");

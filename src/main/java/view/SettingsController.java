@@ -45,7 +45,7 @@ public class SettingsController {
     }
 
     public void submit(ChoiceBox<Integer> difficultyBox, ChoiceBox<Integer> mapBox,
-                       ChoiceBox<Integer> numberOfBallsBox) throws Exception {
+                       ChoiceBox<Integer> numberOfBallsBox , ChoiceBox<String> keyBox, ChoiceBox<String> freezeKeyBox) throws Exception {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText("Change Options Successful");
@@ -55,6 +55,8 @@ public class SettingsController {
         DataBank.setMapNumber(mapBox.getValue());
         DataBank.setCurrentMap(mapBox.getValue());
         DataBank.setNumberOfBalls(numberOfBallsBox.getValue());
+        DataBank.keyForShooting = keyBox.getValue();
+        DataBank.keyForFreezing = freezeKeyBox.getValue();
         new MainMenu().start(DataBank.getStage());
     }
 
@@ -72,6 +74,36 @@ public class SettingsController {
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(10);
         hBox.getChildren().addAll(text,numberOfBallsBox);
+        vBox.getChildren().add(hBox);
+    }
+
+    public void prepareShootingKeyBox(ChoiceBox<String> keyBox, VBox vBox) {
+        keyBox.setValue("Space");
+        keyBox.setMaxHeight(25);
+        ObservableList<String> keyBoxItems = keyBox.getItems();
+        keyBoxItems.addAll("Space","Enter");
+        Text text = new Text();
+        text.setText("Choose shooting key");
+        text.setId("text1");
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(text,keyBox);
+        vBox.getChildren().add(hBox);
+    }
+
+    public void prepareFreezeKeyBox(ChoiceBox<String> freezeKeyBox, VBox vBox) {
+        freezeKeyBox.setValue("Tab");
+        freezeKeyBox.setMaxHeight(25);
+        ObservableList<String> keyBoxItems = freezeKeyBox.getItems();
+        keyBoxItems.addAll("Tab","Shift");
+        Text text = new Text();
+        text.setText("Choose freeze key");
+        text.setId("text1");
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(text,freezeKeyBox);
         vBox.getChildren().add(hBox);
     }
 }

@@ -16,6 +16,10 @@ public class MainMenuController {
         new Game().start(DataBank.getStage());
     }
 
+    public void twoPlayerGame(MouseEvent mouseEvent) {
+
+    }
+
     public void ContinueGame(MouseEvent mouseEvent) {
     }
 
