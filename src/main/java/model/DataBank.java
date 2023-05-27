@@ -23,7 +23,7 @@ public class DataBank {
     private static int rotationSpeed;
     private static double windSpeed;
     private static int freezeTimer;
-    private static int numberOfBalls = 12;
+    private static int numberOfBalls = 20;
     private static int mapNumber = 1;
     private static boolean isMusicMuted = false;
     public static String keyForShooting = "Space";

@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,12 +17,16 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import model.Ball;
 import model.DataBank;
 import view.Game;
+import view.MainMenu;
 import view.animaitons.BallTransition;
 import view.animaitons.BallsMovement;
 
@@ -184,6 +189,7 @@ public class GameController {
                 actionEvent -> changeAngle(angle)));
         angleTimeline.setCycleCount(-1);
         GameController.angleTimeLine = angleTimeline;
+        playSoundOfWind();
         angleTimeline.play();
     }
 
@@ -218,9 +224,11 @@ public class GameController {
         counterForReverse++;
         for (Map.Entry<Ball, Line> ballLineEntry : DataBank.getCurrentMap().getCircles().entrySet()) {
             if (ballLineEntry.getKey().getRadius() >= 7.9 && ballLineEntry.getKey().getRadius() <= 8.1)
-                ballLineEntry.getKey().setRadius(ballLineEntry.getKey().getRadius() * 1.15);
+                ballLineEntry.getKey().setRadius(8 * 1.15);
+            else if(ballLineEntry.getKey().getRadius() >= 5.9 && ballLineEntry.getKey().getRadius() <= 6.1)
+                ballLineEntry.getKey().setRadius(8* 1.15);
             else
-                ballLineEntry.getKey().setRadius(8);
+                ballLineEntry.getKey().setRadius(6);
         }
         if (isCollisionHappened()) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1),
@@ -318,6 +326,9 @@ public class GameController {
         BackgroundFill backgroundFill = new BackgroundFill(Color.color(1, 0, 0), CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         pane.setBackground(background);
+        Text text = new Text("you lost");
+        endOfGame(pane,text);
+        pane.getChildren().add(text);
         pauseTimeLines();
         changeScores();
     }
@@ -327,15 +338,39 @@ public class GameController {
         isGamePaused = true;
         BackgroundFill backgroundFill = new BackgroundFill(Color.color(0.12, 0.55, 0.184), CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
+        Text text = new Text("you win");
+        endOfGame(pane,text);
         pane.setBackground(background);
+        pane.getChildren().add(text);
         pauseTimeLines();
         changeScores();
     }
 
+    private static void endOfGame(Pane pane,Text text) {
+        text.setX(167.5);
+        text.setY(425);
+        Button button = new Button("main menu");
+        button.setLayoutX(162.5);
+        button.setLayoutY(442.5);
+        button.setOnMousePressed(mouseEvent -> {
+            try {
+                restartFields();
+                DataBank.setCurrentMap(DataBank.getMapNumber());
+                new MainMenu().start(DataBank.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        pane.getChildren().add(button);
+        text.setFont(Font.font("Tw Cen MT", FontWeight.NORMAL, FontPosture.ITALIC,20));
+    }
+
     private static void changeScores() {
         if (DataBank.getCurrentUser() != null) {
-            if (DataBank.getCurrentUser().getHighScore() < score * DataBank.getDifficultyDegree())
+            if (DataBank.getCurrentUser().getHighScore() < score * DataBank.getDifficultyDegree()) {
                 DataBank.getCurrentUser().setHighScore(score * DataBank.getDifficultyDegree());
+                DataBank.getCurrentUser().setTime(timeSeconds);
+            }
         }
     }
 
@@ -427,7 +462,7 @@ public class GameController {
         new Game().start(DataBank.getStage());
     }
 
-    private void restartFields() {
+    private static void restartFields() {
         remainedBalls = DataBank.getNumberOfBalls();
         isFreeze = false;
         angleForRotation = 360;
@@ -446,7 +481,7 @@ public class GameController {
         timeSeconds = 0;
         timerTimeLine = null;
         isGamePaused = false;
-        media = new Media(getClass().getResource("/MEDIA/music1.mp3").toString());
+        media = new Media(GameController.class.getResource("/MEDIA/music1.mp3").toString());
         mediaPlayer = new MediaPlayer(media);
     }
 
@@ -526,11 +561,20 @@ public class GameController {
     private void changeTrack(String address) {
         media = new Media(address);
         mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText("Change Options Successful");
         alert.setContentText("this changes will be implemented");
         alert.showAndWait();
+    }
+
+    private void playSoundOfWind() {
+        mediaPlayer.stop();
+        media = new Media(GameController.class.getResource("/MEDIA/music4.mp3").toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
+        mediaPlayer.play();
     }
 
 }

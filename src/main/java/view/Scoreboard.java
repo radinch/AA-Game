@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -37,7 +34,6 @@ public class Scoreboard extends Application {
         TableView table = new TableView<>();
         final Label label = new Label("Scoreboard");
         label.setFont(new Font("Arial", 20));
-
         table.setEditable(true);
 
         TableColumn firstNameCol = new TableColumn("Name");
@@ -64,7 +60,17 @@ public class Scoreboard extends Application {
         vBox.setLayoutX(50);
         vBox.setSpacing(20);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(label,table);
+        Button button = new Button();
+        button.setId("setting-button");
+        button.setText("back");
+        button.setOnMousePressed(mouseEvent -> {
+            try {
+                new MainMenu().start(DataBank.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        vBox.getChildren().addAll(label,table,button);
         pane.getChildren().add(vBox);
     }
 }
