@@ -372,6 +372,7 @@ public class GameController {
                 DataBank.getCurrentUser().setTime(timeSeconds);
             }
         }
+        DataBank.writeToJson();
     }
 
     private void pauseGame(Pane pane) {
